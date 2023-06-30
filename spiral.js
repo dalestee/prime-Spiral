@@ -1,20 +1,3 @@
-var range = prompt("Enter the range of numbers (0 to 1000)");
-
-// Parse the input as an integer
-var number = parseInt(range);
-
-// Check if the input is a number and within the specified range
-while (isNaN(number) || number < 0 || number > 1000) {
-  // Invalid input or outside the range
-  console.log("Invalid range entered");
-  var range = prompt("Enter the range of numbers (0 to 1000)");
-
-  // Parse the input as an integer
-  var number = parseInt(range);
-}
-
-console.log("Valid range entered: " + number);
-
 function isPrime(number) {
   for (var i = 2; i <= Math.sqrt(number); i++) {
     if (number % i === 0) {
@@ -24,12 +7,12 @@ function isPrime(number) {
 
   return true;
 }
-
 function changeCanvasSize() {
   var canvas = document.getElementById("canvas");
   canvas.width = screen.width;
   canvas.height = screen.height;
 }
+
 function drawPointAtCoordinates(x,y){
   var pointSize = 3; // Change according to the size of the point.
   var ctx = document.getElementById("canvas").getContext("2d");
@@ -50,15 +33,36 @@ function getCenterOfCanvas() {
   return [centerX, centerY];
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function playSoundEffect() {
+  var audio = document.getElementById("sound-effect");
+  audio.currentTime = 0;
+  audio.play();
+}
+
+function degreeToRadians(ang) {
+  return ang * (Math.PI/180);
+}
+function rotateVector(vec, ang) {
+  //angle in radians
+  return [vec[0] * Math.cos(ang) - vec[1] * Math.sin(ang), vec[0] * Math.sin(ang) + vec[1] * Math.cos(ang)];
+
+};
+
+
+var frame = 1
+setInterval(() => {
   changeCanvasSize();
   var canvasCenter = getCenterOfCanvas();
   var xCenter = canvasCenter[0];
   var yCenter = canvasCenter[1];
   
-  for (var i = 0; i < number; i++) {
-    var x = i * Math.cos(i);
-    var y = i * Math.sin(i);
-    drawPointAtCoordinates(xCenter + x, yCenter + y*1000);
+  for (var i = 0; i < frame; i++) {
+    if (isPrime(i)) {
+      let vector = [i,0];
+    vector = rotateVector(vector,i);
+    drawPointAtCoordinates(xCenter + vector[0], yCenter + vector[1]);
+    playSoundEffect();
+    }
   }
-});
+  frame++
+}, 20);
